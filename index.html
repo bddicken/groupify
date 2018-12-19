@@ -16,6 +16,16 @@
   <div id="bar">
     <span id="groupify">groupify</span>
     <input id="file_upload" type="file" accept=".csv" onchange="handle_csv_file()"/>
+    <select id="group_size">
+      <option value="" selected disabled>Group size</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+    </select>
+    <button id="update" onclick="create_groups();">Create groups</button>
   </div>
   <div id="roster_csv_div">
     <!-- This is where the roster table can be added -->

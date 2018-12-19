@@ -27,16 +27,28 @@ body {
 
 #groupify {
   position: fixed;
-  top: 10px;
+  top: 15px;
   left: 25px;
   font-size: 50px;
   padding: 0px;
 }
 
+#group_size {
+  position: fixed;
+  top: 55px;
+  left: 225px;
+}
+
 #file_upload {
   position: fixed;
-  top: 40px;
-  left: 250px;
+  top: 25px;
+  left: 225px;
+}
+
+#update {
+  position: fixed;
+  top: 25px;
+  left: 400px;
 }
 
 #roster_csv_div {

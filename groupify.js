@@ -1,4 +1,6 @@
 
+var current_file_content = '';
+
 /**
  * Place males into groups.
  * groups: list of groups. Also functions as an outparam.
@@ -8,19 +10,22 @@
  */
 function place_males(groups, roster, immovable, group_size) {
   roster_copy = roster.slice();
-  group_index = 0
+  group_index = 0;
   while (roster_copy.length > 0) {
     ri = Math.floor(Math.random() * roster_copy.length);
     if (roster_copy[ri].sex == 'f') { roster_copy.splice(ri, 1); }
     else {
-      if (groups[group_index] == undefined) {
-        groups[group_index] = [roster_copy[ri]];
-      } else {
-        groups[group_index].push(roster_copy[ri]);
+      while (true) {
+        if (groups[group_index] == undefined) {
+          groups[group_index] = [{name:(group_index + 1)}];
+          break;
+        } else if (groups[group_index].length >= group_size) {
+          group_index++;
+        } else {
+          break;
+        }
       }
-      if (groups[group_index].length >= group_size) {
-        group_index++;
-      }
+      groups[group_index].push(roster_copy[ri]);
       roster_copy.splice(ri, 1);
     }
   }
@@ -50,7 +55,7 @@ function place_females(groups, roster, immovable, size) {
     item = roster_copy[i];
     if (item['sex'] == 'f') {
       if (groups[ri] == undefined) {
-        groups[ri] = [];
+        groups[ri] = [{name:(ri + 1)}];
       }
       groups[ri].push(item);
       female_count--;
@@ -70,19 +75,26 @@ function place_females(groups, roster, immovable, size) {
   }
 }
 
+function get_group_size() {
+  var s = document.getElementById('group_size');
+  return s.options[s.selectedIndex].value;
+}
+
 /**
  * Group the students.
  * content: the contents of the roster CSV file.
  */
-function begin_grouping(content) {
-  content = content.trim();
+function create_groups() {
+  content = current_file_content.trim();
   parsed_content = Papa.parse(content, {header:true});
   roster = parsed_content.data;
-  groups = Array(Math.ceil(roster.length / 4.0));
-  place_females(groups, roster, true, 2);
-  place_males(groups, roster, true, 4);
+  group_size = get_group_size();
+  groups = Array(Math.ceil(roster.length / group_size));
+  place_females(groups, roster, true, Math.ceil(group_size / 2));
+  place_males(groups, roster, true, group_size);
   //console.log('-----')
   //console.log(groups)
+  document.getElementById('groups_div').innerHTML = '';
   var container = d3.select("#groups_div")
     .append("table")
     .selectAll("tr")
@@ -91,9 +103,10 @@ function begin_grouping(content) {
     .selectAll("td")
       .data(function(d) { return d; }).enter()
       .append("td")
-      .text(function(d) { return d.name + ' ' + d.attendance; })
+      .text(function(d) { return d.name; })
       .style('background-color', function(d) {
-        if (d.sex == 'm') { return '#AAFFAA'; }
+        if (d.sex == undefined) { return '#CCCCCC'; }
+        else if (d.sex == 'm') { return '#AAFFAA'; }
         else { return '#FFFF55';}});
 }
 
@@ -110,7 +123,7 @@ function handle_csv_file() {
     reader.onload = function (evt) {
       content = evt.target.result;
       var parsedCSV = d3.csv.parseRows(content);
-      console.log(parsedCSV);
+      //console.log(parsedCSV);
       var container = d3.select("#roster_csv_div")
         .append("table")
         .selectAll("tr")
@@ -120,7 +133,7 @@ function handle_csv_file() {
           .data(function(d) { return d; }).enter()
           .append("td")
           .text(function(d) { return d; });
-      begin_grouping(content);
+      current_file_content = content;
     }
     reader.onerror = function (evt) {
       document.getElementById("file_contents").innerHTML = "error reading file";

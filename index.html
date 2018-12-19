@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <title>groupify</title>
+</head>
+
+<body>
+
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="./lib/papaparse.min.js"></script>
+
+  <script src="./groupify.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="./style.css">
+
+  <div id="bar">
+    <span id="groupify">groupify</span>
+    <input id="file_upload" type="file" accept=".csv" onchange="handle_csv_file()"/>
+  </div>
+  <div id="roster_csv_div">
+    <!-- This is where the roster table can be added -->
+  </div>
+  <div id="groups_div">
+    <!-- This is where the group table can be added -->
+  </div>
+
+</body>
+
+</html>
+

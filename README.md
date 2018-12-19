@@ -11,5 +11,5 @@ To run locally:
 * Start a webserver.
   One way you can do this is by running the command `python3 -m http.server 8000`.
 * Open a web browser.
-* Go to the address `localhost:/8000`.
+* Go to the address `localhost:8000`.
 
